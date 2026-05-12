@@ -1,5 +1,7 @@
 package de.phbe
 
+import de.phbe.solid.InterfaceSegregationISP
+import de.phbe.solid.LiskovSubstitutionLSP
 import de.phbe.solid.OpenClosedPrincipleOCP
 import de.phbe.solid.SingleResponsibilitySRP
 
@@ -7,11 +9,22 @@ import de.phbe.solid.SingleResponsibilitySRP
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
     // SRP
+    println("--- Single Responsibility Principle (SRP) ---")
     val singleResponsibility = SingleResponsibilitySRP()
     singleResponsibility.showPrinciple()
 
     // OCP
+    println("--- Open Closed Principle (OCP) ---")
     val openClosedPrincipleOCP = OpenClosedPrincipleOCP()
     openClosedPrincipleOCP.showPrinciple()
 
+    // LSP
+    println("--- Liskov Substitution Principle (LSP) ---")
+    val liskovSubstitutionLSP = LiskovSubstitutionLSP()
+    liskovSubstitutionLSP.showPrinciple()
+
+    // ISP
+    println("--- Interface Segregation Principle (ISP) ---")
+    val interfaceSegregation = InterfaceSegregationISP()
+    interfaceSegregation.showPrinciple()
 }
