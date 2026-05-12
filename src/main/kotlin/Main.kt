@@ -1,5 +1,6 @@
 package de.phbe
 
+import de.phbe.solid.DependencyInversionDIP
 import de.phbe.solid.InterfaceSegregationISP
 import de.phbe.solid.LiskovSubstitutionLSP
 import de.phbe.solid.OpenClosedPrincipleOCP
@@ -27,4 +28,9 @@ fun main() {
     println("--- Interface Segregation Principle (ISP) ---")
     val interfaceSegregation = InterfaceSegregationISP()
     interfaceSegregation.showPrinciple()
+
+    // DIP
+    println("--- Dependency Inversion Principle (DIP) ---")
+    val dependencyInversionDIP = DependencyInversionDIP()
+    dependencyInversionDIP.showPrinciple()
 }
