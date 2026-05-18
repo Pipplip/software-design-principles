@@ -2,7 +2,7 @@
 
 Ziel von Software Design Principles ist es, die Wartbarkeit, Erweiterbarkeit und Verständlichkeit von Software zu verbessern. Es gibt verschiedene Prinzipien, die Entwickler befolgen können, um qualitativ hochwertigen Code zu schreiben. Hier sind einige der wichtigsten Prinzipien:
 
-## Grundlegende Prinzipien
+## Grundlegende Design-Prinzipien
 
 #### SOLID Prinzipien
 
@@ -38,7 +38,7 @@ SOLID Prinzipien sind eine Gruppe von fünf Designprinzipien:
 #### Separation of Concerns (SoC)
 > Trenne verschiedene Aspekte eines Programms in separate Module oder Klassen, um die Wartbarkeit und Verständlichkeit zu verbessern. Zum Beispiel könnte die Datenbanklogik von der Geschäftslogik getrennt werden, um die Verantwortlichkeiten klar zu definieren und die Wiederverwendbarkeit zu erhöhen.
 
-#### Low Coupling & High Cohesion
+#### Low Coupling & High Cohesion (SOLID-Prinzipien unterstützen häufig Low Coupling und High Cohesion)
 > **Low Coupling**:   
 > Module oder Klassen sollten möglichst wenig voneinander abhängig sein, um die Flexibilität und Wartbarkeit zu erhöhen.
 
@@ -51,17 +51,62 @@ SOLID Prinzipien sind eine Gruppe von fünf Designprinzipien:
 
 ___
 
-## Architekturprinzipien
+## Core Concepts
 
-#### Clean Architecture
-Clean Architecture ist ein Architekturansatz, der darauf abzielt, die Abhängigkeiten zwischen den verschiedenen Schichten einer Software zu minimieren. Es betont die Trennung von Verantwortlichkeiten und die Verwendung von Schnittstellen, um die Flexibilität und Wartbarkeit zu erhöhen. In Clean Architecture gibt es vier Hauptschichten: die Entities, die Use Cases, die Interface Adapters und die Frameworks & Drivers. Jede Schicht hat eine klare Verantwortung und kommuniziert nur mit den angrenzenden Schichten, um die Abhängigkeiten zu minimieren. 
+#### Domain = Problemwelt
+Domain beschreibt den Anwendungsbereich aus der realen Welt z.B. Online-Shop, Banking, etc. 
+ 
+#### Business Logic = Regeln der Domain
+Bringt die Regeln der Domain in ausführbaren Code.   
+Business Logic liegt typischerweise im Kern (Domain Layer) einer sauberen Architektur.       
+Sie enthält:   
+- Geschäftsregeln und -logik
+- Kernfunktionen
+- Berechnungen und Abläufe    
+- Validierungen und Regeln, die die Domäne definieren
+- Keine Abhängigkeit nach außen (z.B. Datenbanken, APIs, UI, etc.)
 
-#### Hexagonal Architecture
-Hexagonal Architecture, auch bekannt als Ports and Adapters, ist ein Architekturansatz, der darauf abzielt, die Abhängigkeiten zwischen der Anwendungslogik und den externen Systemen zu minimieren. Es betont die Trennung von Verantwortlichkeiten und die Verwendung von Schnittstellen, um die Flexibilität und Wartbarkeit zu erhöhen. In Hexagonal Architecture gibt es drei Hauptkomponenten: die Anwendungslogik, die Ports und die Adapters. Die Anwendungslogik enthält die Geschäftslogik, die Ports definieren die Schnittstellen für die Kommunikation mit externen Systemen, und die Adapters implementieren diese Schnittstellen, um die Kommunikation mit den externen Systemen zu ermöglichen.
+Beispiel Onlineshop:
+- Business Logic: Berechnung von Rabatten, Bestellabwicklung, etc.
+- Es gibt keine Abhängigkeiten zu Datenbanken, APIs oder UI. (z.B. saveToDatabase() oder sendHttpRequest() sollten nicht in der Business Logic auftauchen)
+```kotlin
+class Order(private val items: List<Double>) {
+    fun totalPrice(): Double { val sum = items.sum() ...}
+    fun checkout() { require(items.isNotEmpty()) ...}
+}
+```
 
-#### Domain-Driven Design (DDD)
-Domain-Driven Design (DDD) ist ein Ansatz zur Softwareentwicklung, der sich auf die Modellierung der Domäne und die Zusammenarbeit zwischen Entwicklern und Fachexperten konzentriert. DDD betont die Bedeutung von Ubiquitous Language, um eine gemeinsame Sprache zwischen Entwicklern und Fachexperten zu schaffen, und die Verwendung von Bounded Contexts, um die Komplexität der Domäne zu bewältigen. In DDD gibt es verschiedene Bausteine wie Entities, Value Objects, Aggregates, Repositories und Services, die dazu beitragen, die Geschäftslogik zu modellieren und die Wartbarkeit zu verbessern.
+___
+## Architekturprinzipien & Patterns
 
+Architekturansätze beschreiben die übergeordnete Struktur einer Anwendung.
+
+#### Clean Architecture - definiert WIE strukturiert wird
+Clean Architecture organisiert Anwendungen in klar getrennte Schichten.  
+Die Abhängigkeiten zeigen immer nach innen.
+
+#### Hexagonal Architecture (Ports and Adapters) - definiert WIE verbunden wird
+Hexagonal Architecture trennt die Business Logic von externen Systemen.  
+- Ports = Schnittstellen, die die Anwendungslogik definiert.  
+- Adapters = Implementierungen der Ports, die mit externen Systemen kommunizieren.
+
+Datenbanken, APIs, UI, etc. können leichter ausgetauscht werden, ohne die Anwendungslogik zu beeinflussen.
+
+#### Domain-Driven Design (DDD) - definiert WAS gebaut wird (ohne Technik)
+DDD ist ein Ansatz zur Modellierung komplexer Fachdomänen.   
+Domäne soll die reale Welt abbilden.    
+
+> Entity = Identität (ID) zählt (z.B. Kunde hat eine eindeutige ID)   
+> Value Object = Inhalt zählt (z.B. Money(10, "EUR") kann ich zweimal haben, aber sie sind inhaltlich gleich)
+
+
+Beispiel: Online-Shop   
+- Entities: Objekte mit Identität (z.B. Kunde, Bestellung)
+- Value Objects: Werte ohne Identität (z.B. Adresse, Geldbetrag)
+- Aggregates: Gruppen von Entities und Value Objects, die als Einheit behandelt werden (z.B. Bestellung mit ihren Positionen)
+- Repositories: Schnittstellen zum Zugriff von Aggregates (z.B. BestellungRepository)
+- Services: Geschäftslogik, die nicht zu einer Entity oder einem Value Object gehört (z.B. ZahlungsService)
+- Ubiquitous Language: Gemeinsame Sprache zwischen Entwicklern und Fachexperten z.B. Kunde statt User, Bestellung statt Order, etc.
 ___
 
 ## Funktionale Prinzipien

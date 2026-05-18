@@ -1,5 +1,6 @@
 package de.phbe
 
+import de.phbe.lawofdemeter.LawOfDemeterLOD
 import de.phbe.solid.DependencyInversionDIP
 import de.phbe.solid.InterfaceSegregationISP
 import de.phbe.solid.LiskovSubstitutionLSP
@@ -33,4 +34,9 @@ fun main() {
     println("--- Dependency Inversion Principle (DIP) ---")
     val dependencyInversionDIP = DependencyInversionDIP()
     dependencyInversionDIP.showPrinciple()
+
+    // LOD
+    println("--- Law of Demeter (LOD) ---")
+    val lawOfDemeter = LawOfDemeterLOD()
+    lawOfDemeter.showPrinciple()
 }
