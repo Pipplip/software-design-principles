@@ -64,10 +64,13 @@ Sie enthält:
 - Kernfunktionen
 - Berechnungen und Abläufe    
 - Validierungen und Regeln, die die Domäne definieren
-- Keine Abhängigkeit nach außen (z.B. Datenbanken, APIs, UI, etc.)
+- Keine Abhängigkeit nach außen (z.B. Datenbanken, APIs, UI, Frameworks, Spring, etc.)
+
+Die Orchestrierung von Regeln findet sich aber oft in der Application Layer (Use Cases) wieder, da sie die Business Logic aufruft und mit externen Systemen kommuniziert.  
+z.B. "Bestellung speichern + Payment ausführen + Mail senden"
 
 Beispiel Onlineshop:
-- Business Logic: Berechnung von Rabatten, Bestellabwicklung, etc.
+- Business Logic: Berechnung von Rabatten, Bestellung abschließen, Rechnung erzeugen, etc.
 - Es gibt keine Abhängigkeiten zu Datenbanken, APIs oder UI. (z.B. saveToDatabase() oder sendHttpRequest() sollten nicht in der Business Logic auftauchen)
 ```kotlin
 class Order(private val items: List<Double>) {
@@ -76,6 +79,42 @@ class Order(private val items: List<Double>) {
 }
 ```
 
+#### Layer
+
+1. Domain Layer:
+   - enthält Entities
+   - enthält Value Objects
+   - enthält die Business Logic (Regeln der Domain)
+   - enthält KEINE Technik
+
+2. Application Layer:
+   - enthält Use Cases (Anwendungsfälle)
+   - enthält die Orchestrierung von Regeln (z.B. Bestellung speichern + Payment ausführen + Mail senden)
+   
+3. Infrastructure Layer:
+   - enthält die Implementierung von Schnittstellen (z.B. Datenbankzugriff, APIs, etc.)
+   - enthält die Adapters (z.B. JPA, REST, etc.)
+   - enthält die Frameworks (z.B. Spring, etc.)
+   - Hier leben die Adapter
+
+4. Presentation Layer:
+   - enthält die Ein/Ausgabe einer Anwendung (z.B. REST-API, GUI, etc.)
+
+Typischer Ablauf:
+```
+Request 
+↓ 
+Controller 
+↓ 
+Use Case 
+↓ 
+Domain 
+↓ 
+Ports 
+↓ 
+Adapter 
+↓ Datenbank / APIs
+```
 ___
 ## Architekturprinzipien & Patterns
 
@@ -83,11 +122,12 @@ Architekturansätze beschreiben die übergeordnete Struktur einer Anwendung.
 
 #### Clean Architecture - definiert WIE strukturiert wird
 Clean Architecture organisiert Anwendungen in klar getrennte Schichten.  
-Die Abhängigkeiten zeigen immer nach innen.
+Die Abhängigkeiten zeigen immer nach innen.   
+Die innere Schicht darf nichts überer die äußeren Schichten wissen.
 
 #### Hexagonal Architecture (Ports and Adapters) - definiert WIE verbunden wird
 Hexagonal Architecture trennt die Business Logic von externen Systemen.  
-- Ports = Schnittstellen, die die Anwendungslogik definiert.  
+- Ports = Schnittstellen (Interfaces), die die Anwendungslogik definiert. Werden meist vom inneren Kern definiert (Domain oder Application Layer)    
 - Adapters = Implementierungen der Ports, die mit externen Systemen kommunizieren.
 
 Datenbanken, APIs, UI, etc. können leichter ausgetauscht werden, ohne die Anwendungslogik zu beeinflussen.
@@ -96,16 +136,16 @@ Datenbanken, APIs, UI, etc. können leichter ausgetauscht werden, ohne die Anwen
 DDD ist ein Ansatz zur Modellierung komplexer Fachdomänen.   
 Domäne soll die reale Welt abbilden.    
 
-> Entity = Identität (ID) zählt (z.B. Kunde hat eine eindeutige ID)   
-> Value Object = Inhalt zählt (z.B. Money(10, "EUR") kann ich zweimal haben, aber sie sind inhaltlich gleich)
+> Entity = Identität (ID) zählt (z.B. Kunde hat eine eindeutige ID -> Customer(id=1) != Customer(id=2))   
+> Value Object = Inhalt zählt (z.B. Money(10, "EUR") -> Money(10, "EUR") == Money(10, "EUR"))
 
 
 Beispiel: Online-Shop   
 - Entities: Objekte mit Identität (z.B. Kunde, Bestellung)
 - Value Objects: Werte ohne Identität (z.B. Adresse, Geldbetrag)
 - Aggregates: Gruppen von Entities und Value Objects, die als Einheit behandelt werden (z.B. Bestellung mit ihren Positionen)
-- Repositories: Schnittstellen zum Zugriff von Aggregates (z.B. BestellungRepository)
-- Services: Geschäftslogik, die nicht zu einer Entity oder einem Value Object gehört (z.B. ZahlungsService)
+- Repositories: Schnittstellen zum Zugriff von Aggregates (z.B. OrderRepository)
+- Services: Geschäftslogik, die nicht zu einer Entity oder einem Value Object passt (z.B. ZahlungsService)
 - Ubiquitous Language: Gemeinsame Sprache zwischen Entwicklern und Fachexperten z.B. Kunde statt User, Bestellung statt Order, etc.
 ___
 

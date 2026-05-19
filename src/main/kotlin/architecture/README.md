@@ -32,7 +32,7 @@ Regeln definieren:
 - Der Gesamtpreis einer Bestellung wird berechnet, indem die Preise der Produkte addiert und Rabatte angewendet werden.  
 - Eine Bestellung kann nur abgeschlossen werden, wenn der Kunde gültige Zahlungsinformationen bereitstellt.
 
-Modell bauen (Source Code)   
+Domänenmodell definieren (Source Code)   
 - Product.kt: Definiert die Product-Entity mit ihren Eigenschaften und Methoden.  
 - Order.kt: Definiert die Order-Entity mit ihren Eigenschaften und Methoden.  
 - Customer.kt: Definiert die Customer-Entity mit ihren Eigenschaften und Methoden.  
@@ -43,7 +43,6 @@ Modell bauen (Source Code)
 Was darf der Nutzer?
 - CreateOrderUseCase: Ermöglicht es einem Kunden, eine Bestellung zu erstellen.  
 - CheckoutOrderUseCase: Ermöglicht es einem Kunden, eine Bestellung abzuschließen.
-- OrderController: Definiert die API-Endpunkte, um Bestellungen zu erstellen und abzuschließen.
 - CreateOrderUseCase.kt: Implementiert die Logik zum Erstellen einer Bestellung.  
 - CheckoutOrderUseCase.kt: Implementiert die Logik zum Abschließen einer Bestellung.
 
@@ -76,13 +75,14 @@ API-Endpunkte und DTOs:
 │ - Use Cases                                │
 │ - Orchestrierung                           │
 │ - nutzt Domain                             │
-│ - nutzt Ports (Interfaces                  │
+│ - definiert Ports (Interfaces)             │
 └────────────────────────────────────────────┘
                      ↓
 ┌────────────────────────────────────────────┐ Ganz Innen (Kern)
 │ Domain Layer 🧠                            │
 │ - Entities                                 │
 │ - Value Objects                            │
+│ - Domain Services                          │
 │ - Business Logic                           │
 └────────────────────────────────────────────┘
                      ↑
@@ -90,6 +90,7 @@ API-Endpunkte und DTOs:
         │ Ports (Interfaces)         │
         │ - Repository               │
         │ - PaymentGateway           │
+        │ - EmailService             │
         └────────────────────────────┘
                      ↑
 ┌────────────────────────────────────────────┐
@@ -117,7 +118,7 @@ src/
 │        │    ├── service/
 │        │    │    └── PricingService.kt
 │        │    │
-│        │    └── repository/        (PORTS - interfaces)
+│        │    └── port/        (PORTS - interfaces)
 │        │         └── OrderRepository.kt
 │        │
 │        ├── application/            ⚙️ Use Cases (Clean Architecture)
@@ -127,11 +128,11 @@ src/
 │        │    │
 │        │    └── dto/
 │        │
-│        ├── infrastructure/         🔌 Technische Umsetzung - ADAPTERS (konkrete Implementierungen)
+│        ├── infrastructure/         🔌 Technische Umsetzung - ADAPTERS (konkrete Implementierungen + Framework Code)
 │        │    ├── persistence/
 │        │    │    └── JpaOrderRepository.kt
 │        │    │
-│        │    ├── api/
+│        │    ├── payment/
 │        │    │    └── PaymentClient.kt
 │        │    │
 │        │    └── config/
