@@ -147,3 +147,56 @@ src/
 └── resources/
 ├── application.yml
 ```
+
+# Im Beispiel
+
+# Domain-Beispiel: kleiner Online-Shop
+
+Dieses Beispiel zeigt, wo die Fachlichkeit eines Online-Shops liegt und wie ein
+Aufruf von außen durch die Anwendung läuft. Es verwendet absichtlich keine
+Web- oder Datenbank-Frameworks.
+
+## Ablauf
+
+```text
+FakeOrderController
+        |
+        v
+CreateOrderUseCase
+        |
+        v
+Domain: Product und Order
+        |
+        v
+Ports: ProductRepository und OrderRepository
+        |
+        v
+Adapter: InMemoryProductRepository und InMemoryOrderRepository
+```
+
+`Main` baut die Fake-Controller und ihre Abhängigkeiten zusammen. Das ist die
+einzige Stelle, die die konkreten In-Memory-Implementierungen kennen muss.
+
+## Verantwortlichkeiten
+
+- `domain/Product.kt`: Produktdaten und die Regel, dass nur vorhandener Bestand
+  reserviert werden kann.
+- `domain/Order.kt`: Bestellung, Bestellpositionen und die Berechnung der Summe.
+- `application/CreateOrderUseCase.kt`: nimmt eine Bestellanfrage entgegen,
+  lädt Produkte, reserviert Bestand und speichert die Bestellung.
+- `application/*Repository.kt`: kleine Ports, die der Use-Case benötigt.
+- `infrastructure/InMemoryRepositories.kt`: einfache Fake-Adapter ohne
+  Datenbank.
+- `presentation/FakeControllers.kt`: simuliert Eingaben und Ausgaben einer
+  Präsentationsebene.
+- `Main.kt`: Composition Root und ausführbares Beispiel.
+
+## Beispiel ausführen
+
+```text
+./gradlew run
+```
+
+Der Ablauf zeigt zunächst den Bestand, erstellt eine Bestellung und zeigt
+anschließend den reduzierten Bestand. Die Domain kennt dabei weder Controller
+noch die In-Memory-Implementierungen.

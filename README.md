@@ -147,6 +147,9 @@ Beispiel: Online-Shop
 - Repositories: Schnittstellen zum Zugriff von Aggregates (z.B. OrderRepository)
 - Services: Geschäftslogik, die nicht zu einer Entity oder einem Value Object passt (z.B. ZahlungsService)
 - Ubiquitous Language: Gemeinsame Sprache zwischen Entwicklern und Fachexperten z.B. Kunde statt User, Bestellung statt Order, etc.
+
+Mehr Infos und praktische Beispiele zu DDD: [src/main/kotlin/architecture/README.md](src/main/kotlin/architecture/README.md)
+
 ___
 
 ## Funktionale Prinzipien

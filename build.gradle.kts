@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.20"
+    application
 }
 
 group = "de.phbe"
@@ -15,6 +16,10 @@ dependencies {
 
 kotlin {
     jvmToolchain(21)
+}
+
+application {
+    mainClass = "architecture.MainKt"
 }
 
 tasks.test {
