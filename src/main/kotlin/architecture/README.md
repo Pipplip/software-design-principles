@@ -26,6 +26,86 @@ Domain-Objekte identifizieren:
 - Money (Value Object): Betrag, Währung
 - Address (Value Object): Straße, Stadt, Postleitzahl
 
+### Entity und Value Objects unterscheiden
+
+Der wichtigste Unterschied ist:
+
+>Eine Entity wird über ihre Identität unterschieden. Ein Value Object wird über seinen Wert unterschieden.
+
+Das wirkt zunächst theoretisch, wird aber in der Implementierung ziemlich konkret.
+
+1. Entity
+
+  Beispiel Fitnessstudio:
+  
+  **Member**
+  
+  Zwei Mitglieder können exakt denselben Namen haben:
+  ```
+  Member A
+  Id = 123
+  Name = "Max Müller"
+  
+  Member B
+  Id = 456
+  Name = "Max Müller"
+  ```
+  Sie sind trotzdem zwei verschiedene Mitglieder.  
+  Deshalb braucht die Entity eine Identität:
+
+```kotlin
+  public class Member
+  {
+      public MemberId Id { get; private set; }
+      public string Name { get; private set; }
+  
+      public Member(MemberId id, string name)
+      {
+          Id = id;
+          Name = name;
+      }
+  }
+```
+  Entscheidend ist:
+  
+  `Member 123 != Member 456`
+  
+  auch wenn alle anderen Eigenschaften gleich sind.
+
+2. Value Object
+
+  Nehmen wir Money.
+  
+  20 EUR
+  
+  Hier interessiert dich normalerweise nicht, welches konkrete Objekt im Speicher liegt.
+
+```
+  var price1 = new Money(20, "EUR");
+  var price2 = new Money(20, "EUR");
+  ```
+
+  Du möchtest sagen:
+  
+  `price1 == price2`
+  
+  weil beide denselben Wert repräsentieren.   
+  Eine mögliche Implementierung:
+
+```kotlin
+  public record Money(decimal Amount, string Currency);
+```
+
+  Damit ist der Wert entscheidend:
+
+```
+  Money(20, EUR) = Money(20, EUR)
+```
+  aber:
+```
+  Money(20, EUR) ≠ Money(30, EUR)
+```
+
 ## 3. Business Logic definieren
 Regeln definieren:   
 - Ein Produkt kann nur bestellt werden, wenn es auf Lager ist.  
