@@ -105,6 +105,36 @@ Das wirkt zunächst theoretisch, wird aber in der Implementierung ziemlich konkr
 ```
   Money(20, EUR) ≠ Money(30, EUR)
 ```
+**Warum Value Objects so hilfreich sind:**   
+
+Statt überall primitive Typen zu verwenden:
+
+```kotlin
+decimal amount;
+string currency;
+string email;
+string postalCode;
+```
+kannst du fachliche Konzepte modellieren:
+```kotlin
+Money amount;
+Email email;
+PostalCode postalCode;
+```
+
+Dann kann das Value Object selbst Regeln enthalten:
+```kotlin
+public record Money(decimal Amount, string Currency)
+{
+    public Money Add(Money other)
+    {
+        if (Currency != other.Currency)
+            throw new InvalidOperationException();
+
+        return new Money(Amount + other.Amount, Currency);
+    }
+}
+```
 
 ## 3. Business Logic definieren
 Regeln definieren:   
